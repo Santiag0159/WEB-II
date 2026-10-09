@@ -18,7 +18,11 @@ public class FavoritoService{
     }
 
     public FavoritoResponseDto crear(FavoritoRequestDto requestDto){
-        Favorito favorito = requestDto.aEntidad();
+        Favorito favorito = new Favorito();
+        favorito.setProductoId(requestDto.getProductoId());
+        favorito.setListaId(requestDto.getListaId());
+        favorito.setNotaPersonal(requestDto.getNotaPersonal());
+
         Favorito guardado = favoritoRepository.guardar(favorito);
         return FavoritoResponseDto.desdeEntidad(guardado);
     }

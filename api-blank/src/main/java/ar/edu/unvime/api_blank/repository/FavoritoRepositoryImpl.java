@@ -1,4 +1,4 @@
-package ar.edu.unvime.api_blank.repository;
+/* package ar.edu.unvime.api_blank.repository;
 
 import ar.edu.unvime.api_blank.model.Favorito;
 import org.springframework.stereotype.Repository;
@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-@Repository
+
 public class  FavoritoRepositoryImpl implements FavoritoRepository{
     //ConcirrentHashMap para garantizar la seguridad en hilos
     private final Map<Long, Favorito> tablaFavoritos = new ConcurrentHashMap<>();
@@ -44,4 +44,4 @@ public class  FavoritoRepositoryImpl implements FavoritoRepository{
     public void eliminarPorId(Long id) {
         tablaFavoritos.remove(id);
     }
-}
+}*/

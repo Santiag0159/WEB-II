@@ -1,0 +1,6 @@
+CREATE TABLE listas (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre VARCHAR(250) NOT NULL,
+    descripcion VARCHAR(500) NOT NULL,
+    fecha_creacion TIMESTAMP NOT NULL
+);
