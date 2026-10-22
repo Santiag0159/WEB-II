@@ -3,6 +3,9 @@ package ar.edu.unvime.api_blank.persistence.lista;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import ar.edu.unvime.api_blank.model.Usuario;
+import ar.edu.unvime.api_blank.persistence.Usuario.UsuarioEntity;
+
 @Entity
 @Table(name = "listas")
 public class ListaEntity {
@@ -20,13 +23,18 @@ public class ListaEntity {
     @Column(name = "fecha_creacion", nullable = false)
     private LocalDateTime fechaCreacion;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id")
+    private UsuarioEntity usuario;
+
     public ListaEntity() {}
 
-    public ListaEntity(Long id, String nombre, String descripcion, LocalDateTime fechaCreacion) {
+    public ListaEntity(Long id, String nombre, String descripcion, LocalDateTime fechaCreacion, UsuarioEntity usuario) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.fechaCreacion = fechaCreacion;
+        this.usuario = usuario;
     }
 
     public Long getId() { return id; }
@@ -40,4 +48,7 @@ public class ListaEntity {
 
     public LocalDateTime getFechaCreacion() { return fechaCreacion; }
     public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }
+
+    public UsuarioEntity getUsuario(){return usuario;}
+    public void setUsuario(UsuarioEntity usuario){this.usuario = usuario;}
 }

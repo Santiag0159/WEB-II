@@ -14,10 +14,15 @@ public class Usuario {
         this.rol = rol;
     }
 
+    public Usuario(){}
+
     //Getters 
     public Long getId(){return id;}
     public String getEmail(){return email;}
     public String getPasswordHash(){return passwordHash;}
     public String getRol(){return rol;}
+
+    public void setEmail(String email){this.email = email;}
+    public void setPasswordHash(String passwordHash){this.passwordHash = passwordHash;}
 
 }

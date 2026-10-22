@@ -7,14 +7,16 @@ public class Lista {
     private String nombre;
     private String descripcion;
     private LocalDateTime fechaCreacion;
+    private Long usuarioId;
 
     public Lista() {}
 
-    public Lista(Long id, String nombre, String descripcion, LocalDateTime fechaCreacion) {
+    public Lista(Long id, String nombre, String descripcion, LocalDateTime fechaCreacion, Long usuarioId) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.fechaCreacion = fechaCreacion;
+        this.usuarioId = usuarioId;
     }
 
     public Long getId() { return id; }
@@ -28,4 +30,9 @@ public class Lista {
 
     public LocalDateTime getFechaCreacion() { return fechaCreacion; }
     public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }
+
+    public Long getUsuarioId(){return usuarioId;}
+    public void setUsuarioId(Long usuarioId) {
+        this.usuarioId = usuarioId;
+    }
 }

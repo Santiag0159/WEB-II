@@ -31,5 +31,9 @@ public class UsuarioEntity {
     public String getEmail(){return email; }
     public String getPasswordHash(){return passwordHash;}
     public String getRol(){return rol;}
+    public void setRol(String rol){this.rol = rol;}
 
+    public void setId(Long usuarioId) {
+        this.id = usuarioId;
+    }
 }

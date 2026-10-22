@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,48 +29,85 @@ public class ListaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Crear lista", description = "Crea una nueva lista de favoritos recibiendo nombre y descripción.")
-    public ListaResponseDto crear(@Valid @RequestBody ListaRequestDto request) {
-        Lista creada = listaService.crear(new Lista(null, request.getNombre(), request.getDescripcion(), null));
-        return new ListaResponseDto(creada.getId(), creada.getNombre(), creada.getDescripcion(), creada.getFechaCreacion());
+    @Operation(summary = "Crear lista")
+    public ListaResponseDto crear(@Valid @RequestBody ListaRequestDto request, Authentication authentication) {
+        Long usuarioId = obtenerId(authentication);
+        Lista nuevaLista = new Lista(null, request.getNombre(), request.getDescripcion(), null, null);
+        
+        Lista creada = listaService.crear(nuevaLista, usuarioId);
+        
+        return toDto(creada);
     }
 
     @GetMapping
-    @Operation(summary = "Listar listas", description = "Obtiene el listado completo de todas las listas registradas.")
-    public List<ListaResponseDto> listar() {
-        return listaService.obtenerTodas().stream()
-                .map(l -> new ListaResponseDto(l.getId(), l.getNombre(), l.getDescripcion(), l.getFechaCreacion()))
+    @Operation(summary = "Listar listas")
+    public List<ListaResponseDto> listar(Authentication authentication) {
+        Long usuarioId = obtenerId(authentication);
+        String rol = obtenerRol(authentication);
+        
+        return listaService.obtenerTodas(usuarioId, rol).stream()
+                .map(this::toDto)
                 .toList();
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Obtener una lista", description = "Obtiene los detalles de una lista específica según su ID.")
-    public ListaResponseDto obtenerPorId(@PathVariable Long id) {
-        Lista lista = listaService.obtenerPorId(id);
-        return new ListaResponseDto(lista.getId(), lista.getNombre(), lista.getDescripcion(), lista.getFechaCreacion());
+    @Operation(summary = "Obtener una lista")
+    public ListaResponseDto obtenerPorId(@PathVariable Long id, Authentication authentication) {
+        Long usuarioId = obtenerId(authentication);
+        String rol = obtenerRol(authentication);
+        
+        Lista lista = listaService.obtenerPorId(id, usuarioId, rol);
+        return toDto(lista);
     }
 
     @GetMapping("/{id}/favoritos")
-    @Operation(summary = "Favoritos de una lista", description = "Devuelve el listado de todos los favoritos contenidos dentro de la lista especificada.")
-    public List<FavoritoResponseDto> obtenerFavoritos(@PathVariable Long id) {
-        return listaService.obtenerFavoritosPorListaId(id).stream()
+    @Operation(summary = "Favoritos de una lista")
+    public List<FavoritoResponseDto> obtenerFavoritos(@PathVariable Long id, Authentication authentication) {
+        Long usuarioId = obtenerId(authentication);
+        String rol = obtenerRol(authentication);
+        
+        return listaService.obtenerFavoritosPorListaId(id, usuarioId, rol).stream()
                 .map(f -> new FavoritoResponseDto(f.getId(), f.getListaId(), f.getNotaPersonal(), f.getFechaAgregado()))
                 .toList();
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary = "Eliminar una lista vacía", description = "Elimina una lista siempre y cuando no posea favoritos asociados (retorna 409 si contiene elementos).")
-    public void eliminar(@PathVariable Long id) {
-        listaService.eliminarPorId(id);
+    @Operation(summary = "Eliminar una lista vacía")
+    public void eliminar(@PathVariable Long id, Authentication authentication) {
+        Long usuarioId = obtenerId(authentication);
+        String rol = obtenerRol(authentication);
+        
+        listaService.eliminarPorId(id, usuarioId, rol);
     }
 
     @PostMapping("/{origenId}/mover-favoritos")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary = "Mover favoritos y eliminar lista origen", description = "Reasigna todos los favoritos de la lista origen a la lista destino y elimina la lista origen dentro de una transacción atómica.")
+    @Operation(summary = "Mover favoritos y eliminar lista origen")
     public void moverFavoritos(
             @PathVariable Long origenId,
-            @Valid @RequestBody MoverFavoritosRequestDto request) {
-        listaService.moverFavoritosYEliminarLista(origenId, request.getDestinoId());
+            @Valid @RequestBody MoverFavoritosRequestDto request,
+            Authentication authentication) {
+        
+        Long usuarioId = obtenerId(authentication);
+        String rol = obtenerRol(authentication);
+        
+        listaService.moverFavoritosYEliminarLista(origenId, request.getDestinoId(), usuarioId, rol);
+    }
+
+    // Metodos auxiliares
+    private Long obtenerId(Authentication authentication) {
+        return Long.parseLong(authentication.getName());
+    }
+
+    private String obtenerRol(Authentication authentication) {
+        return authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .findFirst()
+                .orElse("");
+    }
+
+    private ListaResponseDto toDto(Lista lista) {
+        return new ListaResponseDto(lista.getId(), lista.getNombre(), lista.getDescripcion(), lista.getFechaCreacion());
     }
 }

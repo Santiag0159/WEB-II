@@ -1,9 +1,11 @@
 package ar.edu.unvime.api_blank.persistence.lista;
 
 import ar.edu.unvime.api_blank.model.Lista;
+import ar.edu.unvime.api_blank.persistence.Usuario.UsuarioEntity;
 import ar.edu.unvime.api_blank.repository.ListaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +39,13 @@ public class ListaRepositoryAdapter implements ListaRepository {
     }
 
     @Override
+    public List<Lista> obtenerPorUsuarioId(Long usuarioId) {
+        return listaJpaRepository.findByUsuarioId(usuarioId).stream()
+                .map(this::toDomain)
+                .toList();
+    }
+
+    @Override
     public void eliminarPorId(Long id) {
         listaJpaRepository.deleteById(id);
     }
@@ -46,22 +55,37 @@ public class ListaRepositoryAdapter implements ListaRepository {
         return listaJpaRepository.existsById(id);
     }
 
-    // Mapeos explícitos entre Modelo de Dominio y Entidad JPA
     private ListaEntity toEntity(Lista domain) {
+        LocalDateTime fechaCreacion = domain.getFechaCreacion() != null
+                ? domain.getFechaCreacion()
+                : LocalDateTime.now();
+        UsuarioEntity usuarioEntity = null;
+        if (domain.getUsuarioId() != null) {
+            usuarioEntity = new UsuarioEntity();
+            usuarioEntity.setId(domain.getUsuarioId());
+        }
+
         return new ListaEntity(
             domain.getId(),
             domain.getNombre(),
             domain.getDescripcion(),
-            domain.getFechaCreacion()
+            fechaCreacion,
+            usuarioEntity
         );
     }
 
     private Lista toDomain(ListaEntity entity) {
+        Long usuarioId = null;
+        if (entity.getUsuario() != null) {
+            usuarioId = entity.getUsuario().getId();
+        }
+
         return new Lista(
             entity.getId(),
             entity.getNombre(),
             entity.getDescripcion(),
-            entity.getFechaCreacion()
+            entity.getFechaCreacion(),
+            usuarioId
         );
     }
 }

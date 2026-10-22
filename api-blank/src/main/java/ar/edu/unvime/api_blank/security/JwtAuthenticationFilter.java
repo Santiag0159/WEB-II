@@ -5,6 +5,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;    
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,29 +24,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)throws ServletException, IOException{
-        String authHeader = request.getHeader("Autorizado");
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if(authHeader == null || !authHeader.startsWith("Bearer")){
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
         String token = authHeader.substring(7);
-        try{
+        try {
             Claims claims = jwtService.validarToken(token);
-            String email = claims.getSubject();
+            Object usuarioId = claims.get("id");
             String rol = claims.get("rol", String.class);
 
-            //Avisamos a Spring que usuario es y que rol tiene
+            if (usuarioId == null || rol == null || rol.isBlank()) {
+                throw new IllegalArgumentException("El token no contiene la identidad ni el rol del usuario");
+            }
+
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                email, null, List.of(new SimpleGrantedAuthority(rol))
+                usuarioId.toString(), null, List.of(new SimpleGrantedAuthority(rol))
             );
-        } catch (Exception e){
-            //Si el token expiro o es trucho, devuelve 401
+            SecurityContextHolder.getContext().setAuthentication(authToken);
+        } catch (Exception e) {
             SecurityContextHolder.clearContext();
         }
+
         filterChain.doFilter(request, response);
     }
-
 }

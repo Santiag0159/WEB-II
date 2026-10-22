@@ -4,15 +4,32 @@ import jakarta.validation.constraints.NotBlank;
 
 public class ListaRequestDto {
 
-    @NotBlank(message = "El nombre de la lista es obligatorio")
+    @NotBlank(message = "El nombre es obligatorio")
     private String nombre;
 
-    @NotBlank(message = "La descripción es obligatoria")
     private String descripcion;
 
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public ListaRequestDto() {
+    }
 
-    public String getDescripcion() { return descripcion; }
-    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+    public ListaRequestDto(String nombre, String descripcion) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 }
