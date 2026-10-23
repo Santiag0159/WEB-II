@@ -2,9 +2,9 @@ name: Integración Continua (CI)
 
 on:
   push:
-    branches: [ "tp3" ]
+    branches: [ "tp3","main"]
   pull_request:
-    branches: [ "tp3" ]
+    branches: [ "tp3","main" ]
 
 jobs:
   build-and-test:
