@@ -1,4 +1,4 @@
-package ar.edu.unvime.api_blank.persistence.Usuario;
+package ar.edu.unvime.api_blank.persistence.usuario;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

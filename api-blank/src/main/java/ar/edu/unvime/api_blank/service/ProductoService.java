@@ -9,28 +9,29 @@ import org.springframework.web.client.RestClient;
 import java.util.List;
 
 @Service
-public class ProductoService{
+public class ProductoService {
     private final RestClient restClient;
 
-    public ProductoService(){
+    public ProductoService() {
         this.restClient = RestClient.builder()
-        .baseUrl("https://dummyjson.com")
-        .build();
+                .baseUrl("https://dummyjson.com")
+                .build();
     }
 
-    public List<ProductoDto> obtenerTodos(){
+    public List<ProductoDto> obtenerTodos() {
         DummyJsonResponseDto response = restClient.get()
-        .uri("/products")
-        .retrieve()
-        .body(DummyJsonResponseDto.class);
-    
-        if(response == null || response.getProducts() == null){
+                .uri("/products")
+                .retrieve()
+                .body(DummyJsonResponseDto.class);
+
+        if (response == null || response.getProducts() == null) {
             return List.of();
         }
         return response.getProducts().stream()
-        .map(this::mapearADto)
-        .toList();
+                .map(this::mapearADto)
+                .toList();
     }
+
     public ProductoDto obtenerPorId(Long id) {
         DummyProductDto dummyProduct = restClient.get()
                 .uri("/products/{id}", id)
@@ -43,6 +44,7 @@ public class ProductoService{
 
         return mapearADto(dummyProduct);
     }
+
     private ProductoDto mapearADto(DummyProductDto dummy) {
         return new ProductoDto(
                 dummy.getId(),

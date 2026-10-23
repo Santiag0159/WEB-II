@@ -1,4 +1,4 @@
-package ar.edu.unvime.api_blank.persistence.Usuario;
+package ar.edu.unvime.api_blank.persistence.usuario;
 
 import jakarta.persistence.*;
 

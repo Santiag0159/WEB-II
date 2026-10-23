@@ -1,7 +1,7 @@
 package ar.edu.unvime.api_blank.persistence.lista;
 
 import ar.edu.unvime.api_blank.model.Lista;
-import ar.edu.unvime.api_blank.persistence.Usuario.UsuarioEntity;
+import ar.edu.unvime.api_blank.persistence.usuario.UsuarioEntity;
 import ar.edu.unvime.api_blank.repository.ListaRepository;
 import org.springframework.stereotype.Repository;
 
