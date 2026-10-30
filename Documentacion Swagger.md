@@ -4,7 +4,7 @@ Esta API cuenta con documentación interactiva generada mediante **Springdoc-Ope
 
 ---
 
-## 🔗 Acceso a la Interfaz
+## Acceso a la Interfaz
 
 Para navegar la documentación interactiva con la aplicación en ejecución:
 * **Swagger UI:** `http://localhost:8080/swagger-ui/index.html`
@@ -12,7 +12,7 @@ Para navegar la documentación interactiva con la aplicación en ejecución:
 
 ---
 
-## 📌 Grupos de Endpoints Documentados
+## Grupos de Endpoints Documentados
 
 ### 1. Catálogo de Productos (Integración DummyJSON)
 Controlador encargado de consultar el catálogo expuesto por la API pública externa.
@@ -48,7 +48,7 @@ Controlador encargado de realizar las operaciones CRUD sobre la colección local
 
 ---
 
-## 🛡️ Manejo Unificado de Respuestas de Error
+## Manejo Unificado de Respuestas de Error
 
 Todos los endpoints responden bajo una estructura JSON uniforme ante fallos:
 

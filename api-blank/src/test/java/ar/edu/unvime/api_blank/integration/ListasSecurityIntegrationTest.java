@@ -118,6 +118,13 @@ class ListasSecurityIntegrationTest {
     }
 
     @Test
+    void consultarHealth_SinToken_Retorna200() {
+        ResponseEntity<String> respuesta = restTemplate.getForEntity("/health", String.class);
+
+        assertEquals(HttpStatus.OK, respuesta.getStatusCode());
+    }
+
+    @Test
     void accederListaPropia_Retorna200() {
         HttpEntity<Void> peticionGet = new HttpEntity<>(crearHeaders(tokenUsuario1));
         ResponseEntity<String> respuesta = restTemplate.exchange("/api/listas/" + listaUsuario1Id, HttpMethod.GET, peticionGet, String.class);

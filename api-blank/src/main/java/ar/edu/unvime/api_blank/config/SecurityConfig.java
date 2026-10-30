@@ -34,6 +34,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll() // Registro y Login públicos
                 .requestMatchers("/api/productos/**").permitAll() // Catálogo de productos público
+                .requestMatchers("/health").permitAll()
                 .requestMatchers("/error").permitAll()
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .anyRequest().authenticated() // Favoritos, Listas y el resto exigen Token
