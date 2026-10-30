@@ -3,7 +3,12 @@ package ar.edu.unvime.api_blank.controller;
 import ar.edu.unvime.api_blank.model.Usuario;
 import ar.edu.unvime.api_blank.repository.UsuarioRepository;
 import ar.edu.unvime.api_blank.security.JwtService;
-
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController 
 @RequestMapping("/api/auth")
+@Tag(name = "Autenticación", description = "Registro e inicio de sesión. Estos endpoints son públicos.")
 public class AuthController{
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
@@ -24,6 +30,11 @@ public class AuthController{
     }
 
     @PostMapping("/registro")
+    @Operation(summary = "Registrar usuario", description = "Crea una cuenta nueva. No requiere autenticación.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Usuario registrado correctamente"),
+            @ApiResponse(responseCode = "409", description = "El email ya está registrado")
+    })
     public ResponseEntity<?> registrar(@RequestBody RegistroRequest request){
         if(usuarioRepository.existePorEmail(request.email())){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("el email ya esta registrado");
@@ -35,11 +46,14 @@ public class AuthController{
         return ResponseEntity.status(HttpStatus.CREATED).body("Usuario registrado correctamente");
     }
 
-    /**
-     * @param request
-     * @return
-     */
     @PostMapping("/login")
+    @Operation(summary = "Iniciar sesión", description = "Valida el email y la contraseña y devuelve un JWT para acceder a favoritos y listas.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Autenticación correcta; devuelve el token JWT",
+                    content = @Content(schema = @Schema(implementation = TokenResponse.class))),
+            @ApiResponse(responseCode = "401", description = "Email o contraseña incorrectos",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         return usuarioRepository.buscarPorEmail(request.email())
                 .filter(u -> passwordEncoder.matches(request.password(), u.getPasswordHash()))

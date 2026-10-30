@@ -99,7 +99,22 @@ class ListasSecurityIntegrationTest {
     @Test
     void accederEndpointProtegido_SinToken_Retorna401() {
         ResponseEntity<String> respuesta = restTemplate.getForEntity("/api/listas", String.class);
-        assertEquals(HttpStatus.FORBIDDEN, respuesta.getStatusCode());
+        assertEquals(HttpStatus.UNAUTHORIZED, respuesta.getStatusCode());
+    }
+
+    @Test
+    void accederEndpointProtegido_ConTokenInvalido_Retorna401() {
+        HttpEntity<Void> peticion = new HttpEntity<>(crearHeaders("token-invalido"));
+        ResponseEntity<String> respuesta = restTemplate.exchange("/api/listas", HttpMethod.GET, peticion, String.class);
+
+        assertEquals(HttpStatus.UNAUTHORIZED, respuesta.getStatusCode());
+    }
+
+    @Test
+    void consultarDocumentacionSwagger_SinToken_Retorna200() {
+        ResponseEntity<String> respuesta = restTemplate.getForEntity("/v3/api-docs", String.class);
+
+        assertEquals(HttpStatus.OK, respuesta.getStatusCode());
     }
 
     @Test

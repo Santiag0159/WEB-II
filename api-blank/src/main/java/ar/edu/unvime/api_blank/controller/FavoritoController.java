@@ -4,6 +4,7 @@ import ar.edu.unvime.api_blank.dto.FavoritoRequestDto;
 import ar.edu.unvime.api_blank.dto.FavoritoResponseDto;
 import ar.edu.unvime.api_blank.service.FavoritoService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,8 @@ import java.util.List;
 
 @RestController 
 @RequestMapping("/api/favorito")
-@Tag(name="Gestion de favoritos", description = "CRUD completo de la lista de favoritos en memoria RAM")
+@Tag(name="Gestion de favoritos", description = "CRUD de favoritos. Todos los endpoints requieren autenticación mediante JWT Bearer.")
+@SecurityRequirement(name = "bearerAuth")
 public class FavoritoController{
     private final FavoritoService favoritoService;
 

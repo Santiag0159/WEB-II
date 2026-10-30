@@ -7,6 +7,7 @@ import ar.edu.unvime.api_blank.dto.MoverFavoritosRequestDto;
 import ar.edu.unvime.api_blank.model.Lista;
 import ar.edu.unvime.api_blank.service.ListaService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/listas")
-@Tag(name = "Listas", description = "Endpoints para la gestión de listas jerárquicas y reasignación de favoritos")
+@Tag(name = "Listas", description = "Gestión de listas y reasignación de favoritos. Todos los endpoints requieren JWT Bearer; cada usuario accede a sus listas y ADMIN puede acceder a todas.")
+@SecurityRequirement(name = "bearerAuth")
 public class ListaController {
 
     private final ListaService listaService;

@@ -1,6 +1,7 @@
 package ar.edu.unvime.api_blank.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,7 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 usuarioId.toString(), null, List.of(new SimpleGrantedAuthority(rol))
             );
             SecurityContextHolder.getContext().setAuthentication(authToken);
-        } catch (Exception e) {
+        } catch (JwtException | IllegalArgumentException e) {
             SecurityContextHolder.clearContext();
         }
 
