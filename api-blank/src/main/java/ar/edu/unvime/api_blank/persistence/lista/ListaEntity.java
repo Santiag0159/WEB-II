@@ -3,7 +3,6 @@ package ar.edu.unvime.api_blank.persistence.lista;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-import ar.edu.unvime.api_blank.model.Usuario;
 import ar.edu.unvime.api_blank.persistence.usuario.UsuarioEntity;
 
 @Entity
