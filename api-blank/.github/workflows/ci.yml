@@ -26,3 +26,19 @@ jobs:
 
     - name: Ejecutar Tests
       run: ./mvnw clean test
+
+    - name: 1 · Compilar el proyecto y las pruebas
+      run: ./mvnw --batch-mode test-compile
+    
+    - name: 2 · Pruebas unitarias
+      run: ./mvnw --batch-mode test
+
+    - name: 3 · Pruebas de integración y cobertura
+      run: ./mvnw --batch-mode verify
+
+    - name: Guardar el reporte de cobertura
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+          name: reporte-de-cobertura
+          path: target/site/jacoco

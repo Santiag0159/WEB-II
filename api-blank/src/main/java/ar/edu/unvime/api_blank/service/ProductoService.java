@@ -12,8 +12,8 @@ import java.util.List;
 public class ProductoService {
     private final RestClient restClient;
 
-    public ProductoService() {
-        this.restClient = RestClient.builder()
+    public ProductoService(RestClient.Builder restClientBuilder) {
+        this.restClient = restClientBuilder
                 .baseUrl("https://dummyjson.com")
                 .build();
     }
